@@ -1,0 +1,66 @@
+services:
+  cad-service:
+    build:
+      context: ./services/cad-service
+      dockerfile: Dockerfile
+    volumes:
+      - ./web/public:/app/web/public
+    env_file:
+      - services/cad-service/.env
+    networks:
+      - inner
+
+  ner-service:
+    build:
+      context: ./services/ner-service
+      dockerfile: Dockerfile
+    env_file:
+      - services/ner-service/.env
+    networks:
+      - inner
+  
+  orchestrator-service:
+    build:
+      context: ./services/orchestrator-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - services/orchestrator-service/.env
+    networks:
+      - inner
+      - outer
+    depends_on:
+      - cad-service
+      - ner-service
+
+  postgres:
+    image: postgres:15.13-alpine
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - inner
+    healthcheck:
+      test: [ "CMD-SHELL", "pg-isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c listen_addresses='*'
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  postgres_data:
+
+networks:
+  inner: # Internal for communication between services
+    driver: bridge
+  outer: # Allows external access to the service
+    driver: bridge

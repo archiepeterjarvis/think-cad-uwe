@@ -1,0 +1,80 @@
+[
+  {
+    "start": 18,
+    "end": 23,
+    "label": "SHAPE_TYPE",
+    "text": "plate"
+  },
+  {
+    "start": 29,
+    "end": 32,
+    "label": "SHAPE_DIMENSION",
+    "text": "100"
+  },
+  {
+    "start": 33,
+    "end": 35,
+    "label": "UNIT",
+    "text": "mm"
+  },
+  {
+    "start": 44,
+    "end": 46,
+    "label": "SHAPE_DIMENSION",
+    "text": "50"
+  },
+  {
+    "start": 47,
+    "end": 49,
+    "label": "UNIT",
+    "text": "mm"
+  },
+  {
+    "start": 60,
+    "end": 62,
+    "label": "SHAPE_DIMENSION",
+    "text": "10"
+  },
+  {
+    "start": 63,
+    "end": 65,
+    "label": "UNIT",
+    "text": "mm"
+  },
+  {
+    "start": 81,
+    "end": 85,
+    "label": "FEATURE_COUNT",
+    "text": "four"
+  },
+  {
+    "start": 95,
+    "end": 100,
+    "label": "FEATURE",
+    "text": "holes"
+  },
+  {
+    "start": 101,
+    "end": 102,
+    "label": "HOLE_DIAMETER",
+    "text": "5"
+  },
+  {
+    "start": 103,
+    "end": 105,
+    "label": "UNIT",
+    "text": "mm"
+  },
+  {
+    "start": 118,
+    "end": 120,
+    "label": "HOLE_CORNER_OFFSET",
+    "text": "5"
+  },
+  {
+    "start": 121,
+    "end": 123,
+    "label": "UNIT",
+    "text": "mm"
+  }
+]
