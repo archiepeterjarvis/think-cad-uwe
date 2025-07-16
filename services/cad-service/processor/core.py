@@ -7,7 +7,7 @@ from cadquery import cq, Assembly
 
 from core.settings import settings
 from processor.gears import get_gear_handlers
-from processor.interfaces import ShapeHandler, GearHandler, OperationHandler, Exporter
+from processor.interfaces import ShapeHandler, OperationHandler, Exporter
 from processor.shapes import get_shape_handlers
 from shared.models.base import CADConfiguration
 
@@ -19,7 +19,6 @@ class CADProcessor:
 
     def __init__(self, cache: bool = True):
         self.shape_handlers: dict[str, ShapeHandler] = {}
-        self.gear_handlers: dict[str, GearHandler] = {}
         self.operation_handlers: dict[str, OperationHandler] = {}
         self.exporters: dict[str, Exporter] = {}
 
@@ -38,7 +37,7 @@ class CADProcessor:
         for handler_class in get_gear_handlers():
             handler = handler_class()
             for gear_type in handler.supported_types:
-                self.gear_handlers[gear_type] = handler
+                self.shape_handlers[gear_type] = handler
                 logger.debug(
                     f"Registered gear: {gear_type} (handler: {handler_class.__name__})"
                 )
@@ -74,7 +73,6 @@ class CADProcessor:
         # Process basic components (shapes and gears)
         for comp_type, items, handlers in [
             ("shape", config.shapes, self.shape_handlers),
-            ("gear", config.gears, self.gear_handlers),
         ]:
             result = await self._process_entities(comp_type, items, handlers, components, result)
 

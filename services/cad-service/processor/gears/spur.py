@@ -40,4 +40,4 @@ class SpurGearHandler(BaseShapeHandler):
 
     @property
     def supported_types(self) -> list[str]:
-        return ["spur"]
+        return ["spur_gear"]
