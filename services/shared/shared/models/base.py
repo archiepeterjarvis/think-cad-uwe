@@ -254,6 +254,25 @@ class SpurGearParameters(BaseModel):
     hub_length: Optional[float] = Field(None, gt=0)
     rim_width: Optional[float] = Field(None, gt=0)
 
+    @classmethod
+    def create(cls, dimensions: list[dict], features: dict):
+        if len(dimensions) == 0:
+            dimensions.append({"dimension": 10, "unit": "mm"})
+
+        teeth = features.get("teeth", 10)
+        module = features.get("module", 1.0)
+
+        return SpurGearParameters(
+            width=Units.convert_to_mm(dimensions[0]["value"],
+                                      dimensions[0].get("unit", "mm")),
+            teeth=int(teeth),
+            module=float(module),
+            bore=Units.convert_to_mm(
+                features.get("bore", {}).get("value", 5.0),
+                features.get("bore", {}).get("unit", "mm")
+            ),
+        )
+
 
 class BevelGearParameters(BaseModel):
     type: Literal["bevel_gear"] = "bevel_gear"

@@ -66,7 +66,6 @@ async def run_pipeline(
         logger.debug(f"Config response: {config}")
     except Exception as e:
         logger.error(f"Error mapping entities to configuration: {e}")
-        raise e
         return {"status": "error", "message": str(e)}
 
     # Send the NER response to the CAD service to generate geometry

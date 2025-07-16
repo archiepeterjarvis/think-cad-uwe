@@ -28,11 +28,15 @@ export const cadGenerator = tool({
       return {
         model: `/${data.file_path ? data.file_path.split("/").at(-1) : null}`,
         query,
-        error: data.error,
+        error: data.error || null,
       };
     } catch (error) {
       console.error("Error generating CAD model:", error);
-      throw new Error("Failed to generate CAD model");
+      return {
+        model: null,
+        query,
+        error: error instanceof Error ? error.message : "Failed to generate CAD model",
+      };
     }
   },
 });

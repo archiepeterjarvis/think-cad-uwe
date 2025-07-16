@@ -1,4 +1,3 @@
-import json
 import logging
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
@@ -6,7 +5,7 @@ from uuid import uuid4
 from shared.models.base import (
     CADConfiguration, Shape, BoxParameters, CylinderParameters,
     SphereParameters, ConeParameters, TorusParameters, WedgeParameters,
-    Units, Metadata
+    Units, Metadata, SpurGearParameters
 )
 
 CANONICAL_TYPE_MAPPING = {
@@ -28,6 +27,7 @@ class CADConfigurationMapper:
             "torus": self._create_torus_parameters,
             "wedge": self._create_wedge_parameters,
             "plate": self._create_box_parameters,
+            "spur gear": self._create_spur_gear_parameters,
         }
 
     def map_to_configuration(self, processed_entities: Dict[str, Any]) -> CADConfiguration:
@@ -108,6 +108,9 @@ class CADConfigurationMapper:
             self.logger.error(f"Failed to create shape: {e}")
             raise e
             return None
+
+    def _create_spur_gear_parameters(self, dimensions: List[Dict], features: Dict) -> BoxParameters:
+        return SpurGearParameters.create(dimensions, features)
 
     def _create_box_parameters(self, dimensions: List[Dict], features: Dict) -> BoxParameters:
         """Create BoxParameters from dimensions and features."""
@@ -231,7 +234,8 @@ class CADConfigurationMapper:
 
     def _parse_features(self, features: Dict) -> List:
         """Parse features dictionary into feature objects."""
-        return []
+        if features is None:
+            return []
 
 
 class CADMapper:
@@ -245,6 +249,7 @@ class CADMapper:
             "FEATURE": self._process_feature_type,
             "HOLE_DIAMETER": self._process_hole_diameter,
             "HOLE_CORNER_OFFSET": self._process_hole_corner_offset,
+            "GEAR_TEETH": self._process_gear_teeth,
         }
 
     def process_entities(self, entities: List[Dict]) -> CADConfiguration:
@@ -309,13 +314,6 @@ class CADMapper:
         config["features"]["corner_offset"] = {"value": value, "unit": unit}
         return index + 1
 
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-    mapper = CADMapper()
-
-    with open("data/mounting_plate.json", "r") as f:
-        sample_entities = json.load(f)
-
-    cad_config = mapper.process_entities(sample_entities)
-    print(cad_config.model_dump(exclude_none=True))
+    def _process_gear_teeth(self, config: Dict, entities: List[Dict], index: int) -> int:
+        config["features"]["teeth"] = float(entities[index]["text"])
+        return index + 1
