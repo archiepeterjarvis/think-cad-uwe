@@ -263,6 +263,7 @@ class SpurGearParameters(BaseModel):
         module = features.get("module", 1.0)
 
         return SpurGearParameters(
+            type="spur_gear",
             width=Units.convert_to_mm(
                 dimensions[0]["value"],
                 dimensions[0].get("unit", "mm")

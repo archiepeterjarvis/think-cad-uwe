@@ -9,7 +9,8 @@ from shared.models.base import (
 )
 
 CANONICAL_TYPE_MAPPING = {
-    "plate": "box"
+    "plate": "box",
+    "spur gear": "spur_gear",
 }
 
 

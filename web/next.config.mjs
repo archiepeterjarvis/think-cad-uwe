@@ -14,12 +14,14 @@ const nextConfig = {
       config.watchOptions = {
         ...config.watchOptions,
         ignored: [
+            'public/**',
             '**/public/*.gltf',
             '**/public/*.bin'
         ]
       }
     }
-  }
+    return config;
+  },
 };
 
 export default nextConfig;
