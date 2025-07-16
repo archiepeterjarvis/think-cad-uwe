@@ -256,15 +256,17 @@ class SpurGearParameters(BaseModel):
 
     @classmethod
     def create(cls, dimensions: list[dict], features: dict):
-        if len(dimensions) == 0:
-            dimensions.append({"dimension": 10, "unit": "mm"})
+        if not dimensions or "value" not in dimensions[0]:
+            dimensions = [{"value": 10, "unit": "mm"}]
 
         teeth = features.get("teeth", 10)
         module = features.get("module", 1.0)
 
         return SpurGearParameters(
-            width=Units.convert_to_mm(dimensions[0]["value"],
-                                      dimensions[0].get("unit", "mm")),
+            width=Units.convert_to_mm(
+                dimensions[0]["value"],
+                dimensions[0].get("unit", "mm")
+            ),
             teeth=int(teeth),
             module=float(module),
             bore=Units.convert_to_mm(
@@ -272,7 +274,6 @@ class SpurGearParameters(BaseModel):
                 features.get("bore", {}).get("unit", "mm")
             ),
         )
-
 
 class BevelGearParameters(BaseModel):
     type: Literal["bevel_gear"] = "bevel_gear"
