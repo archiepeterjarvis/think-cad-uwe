@@ -211,35 +211,6 @@ class TextParameters(BaseModel):
     valign: Literal["center", "bottom", "top"] = "center"
 
 
-class Shape(BaseModel):
-    id: Optional[str] = None
-    type: Literal[
-        "box",
-        "cylinder",
-        "sphere",
-        "cone",
-        "torus",
-        "wedge",
-        "extrude",
-        "revolve",
-        "loft",
-        "sweep",
-        "text",
-    ]
-    parameters: Union[
-        BoxParameters,
-        CylinderParameters,
-        SphereParameters,
-        ConeParameters,
-        TorusParameters,
-        WedgeParameters,
-        ExtrudeParameters,
-        TextParameters,
-    ] = Field(..., discriminator="type")
-    position: List[float] = Field([0, 0, 0], min_length=3, max_length=3)
-    rotation: List[float] = Field([0, 0, 0], min_length=3, max_length=3)
-
-
 class SpurGearParameters(BaseModel):
     type: Literal["spur_gear"] = "spur_gear"
     module: float = Field(..., gt=0)
@@ -287,6 +258,37 @@ class BevelGearParameters(BaseModel):
     clearance: Optional[float] = Field(0, ge=0)
     backlash: Optional[float] = Field(0, ge=0)
     face_width: Optional[float] = Field(0, gt=0)
+
+
+class Shape(BaseModel):
+    id: Optional[str] = None
+    type: Literal[
+        "box",
+        "cylinder",
+        "sphere",
+        "cone",
+        "torus",
+        "wedge",
+        "extrude",
+        "revolve",
+        "loft",
+        "sweep",
+        "text",
+        "spur_gear",
+    ]
+    parameters: Union[
+        BoxParameters,
+        CylinderParameters,
+        SphereParameters,
+        ConeParameters,
+        TorusParameters,
+        WedgeParameters,
+        ExtrudeParameters,
+        TextParameters,
+        SpurGearParameters,
+    ] = Field(..., discriminator="type")
+    position: List[float] = Field([0, 0, 0], min_length=3, max_length=3)
+    rotation: List[float] = Field([0, 0, 0], min_length=3, max_length=3)
 
 
 # TODO: Add other gear types
